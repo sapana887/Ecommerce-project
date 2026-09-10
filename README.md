@@ -13,6 +13,8 @@ A responsive e-commerce product store built with **React.js** and **Fake Store A
 * Error handling when the API request fails
 * Responsive product grid
 * Reusable `ProductCard` component
+* Add products to shopping cart
+* Display dynamic cart item count
 
 ## 🛠️ Technologies Used
 
@@ -22,22 +24,6 @@ A responsive e-commerce product store built with **React.js** and **Fake Store A
 * CSS
 * Fetch API
 * Fake Store API
-
-## 📚 Concepts Practiced
-
-* `useState`
-* `useEffect`
-* `fetch()`
-* `async/await`
-* `try/catch`
-* API responses
-* Conditional rendering
-* Array `filter()`
-* Array `map()`
-* JavaScript `Set`
-* React props
-* Reusable components
-* Responsive CSS
 
 ## 📁 Project Structure
 
@@ -106,13 +92,16 @@ Product Data
 React Components
    ↓
 Search & Category Filtering
+   ↓
+Add to Cart
+   ↓
+Cart State & Item Count
 ```
 
 ## 📌 Future Improvements
 
 Possible features for future versions:
 
-* Shopping cart functionality
 * Product details page
 * Quantity controls
 * Checkout page
