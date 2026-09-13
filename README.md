@@ -15,6 +15,11 @@ A responsive e-commerce product store built with **React.js** and **Fake Store A
 * Reusable `ProductCard` component
 * Add products to shopping cart
 * Display dynamic cart item count
+* Increase and decrease product quantity
+* Remove products from cart
+* Display individual product subtotals
+* Calculate total cart price
+* Continue shopping from cart
 
 ## 🛠️ Technologies Used
 
@@ -76,7 +81,7 @@ https://fakestoreapi.com/products
 
 ## 🎯 Project Overview
 
-This project demonstrates how to connect a React application to an external API and work with the returned data.
+This project demonstrates how to connect a React application to an external API, display product data, manage application state, and build shopping cart functionality.
 
 The application follows this flow:
 
@@ -95,7 +100,11 @@ Search & Category Filtering
    ↓
 Add to Cart
    ↓
-Cart State & Item Count
+Quantity Management
+   ↓
+Cart State
+   ↓
+Cart Total
 ```
 
 ## 📌 Future Improvements
@@ -103,8 +112,9 @@ Cart State & Item Count
 Possible features for future versions:
 
 * Product details page
-* Quantity controls
 * Checkout page
 * User authentication
 * Backend API
 * Database integration
+
+````

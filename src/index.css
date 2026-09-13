@@ -303,6 +303,115 @@ a {
   color: #d00;
 }
 
+/* Cart */
+
+.cart-section {
+  max-width: 1000px;
+  margin: 0 auto;
+
+  padding: 50px 20px;
+}
+
+.cart-section h2 {
+  text-align: center;
+
+  font-size: 30px;
+
+  margin-bottom: 30px;
+}
+
+.cart-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 25px;
+
+  background-color: white;
+
+  padding: 20px;
+
+  margin-bottom: 20px;
+
+  border: 1px solid #ddd;
+
+  border-radius: 10px;
+}
+
+.cart-item h3 {
+  margin-bottom: 10px;
+}
+
+.cart-item p {
+  font-size: 18px;
+
+  font-weight: bold;
+
+  margin-bottom: 5px;
+}
+
+/* Cart product image */
+
+.cart-product-image {
+  width: 100px;
+
+  height: 100px;
+
+  object-fit: contain;
+}
+
+/* Remove button */
+
+.remove-cart-button {
+  padding: 8px 16px;
+
+  margin-top: 8px;
+
+  border: none;
+
+  border-radius: 5px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  background-color: #222;
+
+  color: white;
+}
+
+.remove-cart-button:hover {
+  opacity: 0.8;
+}
+
+/* Continue shopping */
+
+.continue-shopping-button {
+  padding: 14px 30px;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  border: none;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+
+  min-width: 200px;
+
+  background-color: #222;
+
+  color: white;
+
+  margin-top: 10px;
+}
+
+.continue-shopping-button:hover {
+  opacity: 0.8;
+}
+
 /* Responsive */
 
 @media (max-width: 1000px) {
@@ -336,6 +445,10 @@ a {
   .search-container input {
     width: 90%;
   }
+
+  .cart-item {
+    gap: 15px;
+  }
 }
 
 @media (max-width: 500px) {
@@ -354,4 +467,42 @@ a {
   .search-container input {
     width: 100%;
   }
+
+  .cart-item {
+    align-items: flex-start;
+  }
+
+  .cart-product-image {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.quantity-controls button {
+  width: 36px;
+  height: 36px;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f5f5f5;
+}
+
+.quantity-controls button:hover {
+  background-color: #e5e5e5;
+}
+
+.quantity-controls span {
+  min-width: 25px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
 }
