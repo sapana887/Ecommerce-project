@@ -20,6 +20,8 @@ A responsive e-commerce product store built with **React.js** and **Fake Store A
 * Display individual product subtotals
 * Calculate total cart price
 * Continue shopping from cart
+* Save cart data using localStorage
+* Restore cart data after page refresh
 
 ## 🛠️ Technologies Used
 
@@ -29,6 +31,7 @@ A responsive e-commerce product store built with **React.js** and **Fake Store A
 * CSS
 * Fetch API
 * Fake Store API
+* localStorage
 
 ## 📁 Project Structure
 
@@ -81,7 +84,7 @@ https://fakestoreapi.com/products
 
 ## 🎯 Project Overview
 
-This project demonstrates how to connect a React application to an external API, display product data, manage application state, and build shopping cart functionality.
+This project demonstrates how to connect a React application to an external API, display product data, manage application state, build shopping cart functionality, and persist cart data using localStorage.
 
 The application follows this flow:
 
@@ -105,6 +108,10 @@ Quantity Management
 Cart State
    ↓
 Cart Total
+   ↓
+localStorage
+   ↓
+Cart Restored After Refresh
 ```
 
 ## 📌 Future Improvements
@@ -116,5 +123,3 @@ Possible features for future versions:
 * User authentication
 * Backend API
 * Database integration
-
-````

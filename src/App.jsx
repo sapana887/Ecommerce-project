@@ -7,7 +7,14 @@ function App() {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
-  const [cart, setCart] = useState([]);
+
+  // Load cart from localStorage
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem("cart");
+
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
   const [showCart, setShowCart] = useState(false);
 
   useEffect(() => {
@@ -33,6 +40,11 @@ function App() {
 
     getProducts();
   }, []);
+
+  // Save cart to localStorage whenever cart changes
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   const categories = [
     "all",
