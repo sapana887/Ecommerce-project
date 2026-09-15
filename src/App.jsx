@@ -17,6 +17,7 @@ function App() {
 
   const [showCart, setShowCart] = useState(false);
 
+  // Fetch products
   useEffect(() => {
     async function getProducts() {
       try {
@@ -41,16 +42,18 @@ function App() {
     getProducts();
   }, []);
 
-  // Save cart to localStorage whenever cart changes
+  // Save cart to localStorage
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
+  // Categories
   const categories = [
     "all",
     ...new Set(products.map((product) => product.category)),
   ];
 
+  // Filter products
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.title
       .toLowerCase()
@@ -130,7 +133,12 @@ function App() {
     );
   };
 
-  // Calculate cart total
+  // Clear entire cart
+  const handleClearCart = () => {
+    setCart([]);
+  };
+
+  // Calculate subtotal
   const cartTotal = cart.reduce(
     (total, product) =>
       total + product.price * product.quantity,
@@ -144,9 +152,37 @@ function App() {
     0
   );
 
+  // Shipping cost
+  const shippingCost =
+    cart.length === 0
+      ? 0
+      : cartTotal >= 100
+      ? 0
+      : 10;
+
+  // Final total
+  const finalTotal = cartTotal + shippingCost;
+
+  // Checkout
+  const handleCheckout = () => {
+    if (cart.length === 0) {
+      return;
+    }
+
+    alert(
+      `Order placed successfully!\nTotal: $${finalTotal.toFixed(
+        2
+      )}`
+    );
+
+    setCart([]);
+    setShowCart(false);
+  };
+
   return (
     <div className="app">
 
+      {/* HEADER */}
       <header className="header">
 
         <h1>My Store</h1>
@@ -168,6 +204,7 @@ function App() {
 
       <main>
 
+        {/* CART PAGE */}
         {showCart ? (
 
           <section className="cart-section">
@@ -176,101 +213,188 @@ function App() {
 
             {cart.length === 0 ? (
 
-              <p>Your cart is empty.</p>
+              <div className="empty-cart">
+
+                <p>Your cart is empty.</p>
+
+                <button
+                  className="continue-shopping-button"
+                  onClick={() => setShowCart(false)}
+                >
+                  ← Continue Shopping
+                </button>
+
+              </div>
 
             ) : (
 
               <>
-                {cart.map((product) => (
+                {/* CART ITEMS */}
+                <div className="cart-items">
 
-                  <div
-                    key={product.id}
-                    className="cart-item"
-                  >
+                  {cart.map((product) => (
 
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      className="cart-product-image"
-                    />
+                    <div
+                      key={product.id}
+                      className="cart-item"
+                    >
 
-                    <div className="cart-product-info">
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className="cart-product-image"
+                      />
 
-                      <h3>{product.title}</h3>
+                      <div className="cart-product-info">
 
-                      <p>
-                        Price: ${product.price}
-                      </p>
+                        <h3>{product.title}</h3>
 
-                      <div className="quantity-controls">
+                        <p>
+                          Price: ${product.price.toFixed(2)}
+                        </p>
 
+                        {/* QUANTITY */}
+                        <div className="quantity-controls">
+
+                          <button
+                            onClick={() =>
+                              decreaseQuantity(
+                                product.id
+                              )
+                            }
+                          >
+                            −
+                          </button>
+
+                          <span>
+                            {product.quantity}
+                          </span>
+
+                          <button
+                            onClick={() =>
+                              increaseQuantity(
+                                product.id
+                              )
+                            }
+                          >
+                            +
+                          </button>
+
+                        </div>
+
+                        {/* SUBTOTAL */}
+                        <p>
+                          Subtotal: $
+                          {(
+                            product.price *
+                            product.quantity
+                          ).toFixed(2)}
+                        </p>
+
+                        {/* REMOVE */}
                         <button
+                          className="remove-cart-button"
                           onClick={() =>
-                            decreaseQuantity(product.id)
+                            handleRemoveFromCart(
+                              product.id
+                            )
                           }
                         >
-                          −
-                        </button>
-
-                        <span>
-                          {product.quantity}
-                        </span>
-
-                        <button
-                          onClick={() =>
-                            increaseQuantity(product.id)
-                          }
-                        >
-                          +
+                          Remove
                         </button>
 
                       </div>
 
-                      <p>
-                        Subtotal: $
-                        {(
-                          product.price *
-                          product.quantity
-                        ).toFixed(2)}
-                      </p>
-
-                      <button
-                        className="remove-cart-button"
-                        onClick={() =>
-                          handleRemoveFromCart(
-                            product.id
-                          )
-                        }
-                      >
-                        Remove
-                      </button>
-
                     </div>
+
+                  ))}
+
+                </div>
+
+                {/* CART SUMMARY */}
+                <div className="cart-summary">
+
+                  <h3>Order Summary</h3>
+
+                  <div className="summary-row">
+                    <span>Total Items:</span>
+                    <span>{cartItemCount}</span>
+                  </div>
+
+                  <div className="summary-row">
+                    <span>Subtotal:</span>
+                    <span>
+                      ${cartTotal.toFixed(2)}
+                    </span>
+                  </div>
+
+                  <div className="summary-row">
+                    <span>Shipping:</span>
+
+                    <span>
+                      {shippingCost === 0
+                        ? "FREE"
+                        : `$${shippingCost.toFixed(2)}`}
+                    </span>
+                  </div>
+
+                  {cartTotal > 0 && cartTotal < 100 && (
+                    <p className="shipping-message">
+                      Add $
+                      {(100 - cartTotal).toFixed(2)}{" "}
+                      more for free shipping!
+                    </p>
+                  )}
+
+                  <div className="summary-total">
+                    <span>Total:</span>
+
+                    <span>
+                      ${finalTotal.toFixed(2)}
+                    </span>
+                  </div>
+
+                  {/* CART ACTIONS */}
+                  <div className="cart-actions">
+
+                    <button
+                      className="clear-cart-button"
+                      onClick={handleClearCart}
+                    >
+                      Clear Cart
+                    </button>
+
+                    <button
+                      className="checkout-button"
+                      onClick={handleCheckout}
+                    >
+                      Checkout
+                    </button>
 
                   </div>
 
-                ))}
+                </div>
 
-                <h3 className="cart-total">
-                  Total: ${cartTotal.toFixed(2)}
-                </h3>
+                {/* CONTINUE SHOPPING */}
+                <button
+                  className="continue-shopping-button"
+                  onClick={() => setShowCart(false)}
+                >
+                  ← Continue Shopping
+                </button>
+
               </>
 
             )}
-
-            <button
-              className="continue-shopping-button"
-              onClick={() => setShowCart(false)}
-            >
-              ← Continue Shopping
-            </button>
 
           </section>
 
         ) : (
 
+          /* PRODUCT PAGE */
           <>
 
+            {/* HERO */}
             <section className="hero">
 
               <h2>Welcome to My Store</h2>
@@ -281,16 +405,19 @@ function App() {
 
             </section>
 
+            {/* PRODUCTS */}
             <section className="products-section">
 
               <h2>Our Products</h2>
 
+              {/* LOADING */}
               {loading && (
                 <p className="message">
                   Loading products...
                 </p>
               )}
 
+              {/* ERROR */}
               {error && (
                 <p className="message error">
                   {error}
@@ -301,6 +428,7 @@ function App() {
 
                 <>
 
+                  {/* SEARCH */}
                   <div className="search-container">
 
                     <input
@@ -314,6 +442,7 @@ function App() {
 
                   </div>
 
+                  {/* CATEGORY FILTER */}
                   <div className="category-container">
 
                     {categories.map((item) => (
@@ -338,6 +467,7 @@ function App() {
 
                   </div>
 
+                  {/* PRODUCTS */}
                   {filteredProducts.length > 0 ? (
 
                     <div className="product-grid">
