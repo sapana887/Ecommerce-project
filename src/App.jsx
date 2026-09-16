@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import ProductCard from "./components/ProductCard";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
 
 function App() {
+  const [page, setPage] = useState("login");
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -14,8 +18,6 @@ function App() {
 
     return savedCart ? JSON.parse(savedCart) : [];
   });
-
-  const [showCart, setShowCart] = useState(false);
 
   // Fetch products
   useEffect(() => {
@@ -120,16 +122,17 @@ function App() {
   // Decrease quantity
   const decreaseQuantity = (productId) => {
     setCart((currentCart) =>
-      currentCart
-        .map((product) =>
-          product.id === productId
-            ? {
-                ...product,
-                quantity: product.quantity - 1,
-              }
-            : product
-        )
-        .filter((product) => product.quantity > 0)
+      currentCart.map((product) =>
+        product.id === productId
+          ? {
+              ...product,
+              quantity: Math.max(
+                1,
+                product.quantity - 1
+              ),
+            }
+          : product
+      )
     );
   };
 
@@ -176,8 +179,30 @@ function App() {
     );
 
     setCart([]);
-    setShowCart(false);
+    setPage("home");
   };
+
+  // Login page
+  if (page === "login") {
+    return (
+      <Login
+        onLogin={() => setPage("home")}
+        onSignup={() => setPage("signup")}
+        onGuest={() => setPage("home")}
+      />
+    );
+  }
+
+  // Signup page
+  if (page === "signup") {
+    return (
+      <Signup
+        onSignup={() => setPage("home")}
+        onLogin={() => setPage("login")}
+        onGuest={() => setPage("home")}
+      />
+    );
+  }
 
   return (
     <div className="app">
@@ -188,14 +213,54 @@ function App() {
         <h1>My Store</h1>
 
         <nav>
-          <a href="#">Home</a>
-          <a href="#">Products</a>
-          <a href="#">Contact</a>
+
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              setPage("home");
+            }}
+          >
+            Home
+          </a>
+
+          <a
+            href="#products"
+            onClick={(e) => {
+              e.preventDefault();
+
+              setPage("home");
+
+              setTimeout(() => {
+                document
+                  .getElementById("products")
+                  ?.scrollIntoView({
+                    behavior: "smooth",
+                  });
+              }, 0);
+            }}
+          >
+            Products
+          </a>
+
+          <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+
+              alert(
+                "Contact: support@mystore.com"
+              );
+            }}
+          >
+            Contact
+          </a>
+
         </nav>
 
         <button
           className="cart-button"
-          onClick={() => setShowCart(true)}
+          onClick={() => setPage("cart")}
         >
           🛒 Cart ({cartItemCount})
         </button>
@@ -205,7 +270,8 @@ function App() {
       <main>
 
         {/* CART PAGE */}
-        {showCart ? (
+
+        {page === "cart" ? (
 
           <section className="cart-section">
 
@@ -219,7 +285,7 @@ function App() {
 
                 <button
                   className="continue-shopping-button"
-                  onClick={() => setShowCart(false)}
+                  onClick={() => setPage("home")}
                 >
                   ← Continue Shopping
                 </button>
@@ -229,7 +295,9 @@ function App() {
             ) : (
 
               <>
+
                 {/* CART ITEMS */}
+
                 <div className="cart-items">
 
                   {cart.map((product) => (
@@ -250,10 +318,12 @@ function App() {
                         <h3>{product.title}</h3>
 
                         <p>
-                          Price: ${product.price.toFixed(2)}
+                          Price: $
+                          {product.price.toFixed(2)}
                         </p>
 
                         {/* QUANTITY */}
+
                         <div className="quantity-controls">
 
                           <button
@@ -283,6 +353,7 @@ function App() {
                         </div>
 
                         {/* SUBTOTAL */}
+
                         <p>
                           Subtotal: $
                           {(
@@ -292,6 +363,7 @@ function App() {
                         </p>
 
                         {/* REMOVE */}
+
                         <button
                           className="remove-cart-button"
                           onClick={() =>
@@ -312,6 +384,7 @@ function App() {
                 </div>
 
                 {/* CART SUMMARY */}
+
                 <div className="cart-summary">
 
                   <h3>Order Summary</h3>
@@ -338,23 +411,29 @@ function App() {
                     </span>
                   </div>
 
-                  {cartTotal > 0 && cartTotal < 100 && (
-                    <p className="shipping-message">
-                      Add $
-                      {(100 - cartTotal).toFixed(2)}{" "}
-                      more for free shipping!
-                    </p>
-                  )}
+                  {cartTotal > 0 &&
+                    cartTotal < 100 && (
+                      <p className="shipping-message">
+                        Add $
+                        {(100 - cartTotal).toFixed(
+                          2
+                        )}{" "}
+                        more for free shipping!
+                      </p>
+                    )}
 
                   <div className="summary-total">
+
                     <span>Total:</span>
 
                     <span>
                       ${finalTotal.toFixed(2)}
                     </span>
+
                   </div>
 
                   {/* CART ACTIONS */}
+
                   <div className="cart-actions">
 
                     <button
@@ -376,9 +455,10 @@ function App() {
                 </div>
 
                 {/* CONTINUE SHOPPING */}
+
                 <button
                   className="continue-shopping-button"
-                  onClick={() => setShowCart(false)}
+                  onClick={() => setPage("home")}
                 >
                   ← Continue Shopping
                 </button>
@@ -391,10 +471,12 @@ function App() {
 
         ) : (
 
-          /* PRODUCT PAGE */
+          /* ORIGINAL HOME PAGE */
+
           <>
 
             {/* HERO */}
+
             <section className="hero">
 
               <h2>Welcome to My Store</h2>
@@ -406,11 +488,16 @@ function App() {
             </section>
 
             {/* PRODUCTS */}
-            <section className="products-section">
+
+            <section
+              className="products-section"
+              id="products"
+            >
 
               <h2>Our Products</h2>
 
               {/* LOADING */}
+
               {loading && (
                 <p className="message">
                   Loading products...
@@ -418,6 +505,7 @@ function App() {
               )}
 
               {/* ERROR */}
+
               {error && (
                 <p className="message error">
                   {error}
@@ -429,6 +517,7 @@ function App() {
                 <>
 
                   {/* SEARCH */}
+
                   <div className="search-container">
 
                     <input
@@ -443,6 +532,7 @@ function App() {
                   </div>
 
                   {/* CATEGORY FILTER */}
+
                   <div className="category-container">
 
                     {categories.map((item) => (
@@ -468,6 +558,7 @@ function App() {
                   </div>
 
                   {/* PRODUCTS */}
+
                   {filteredProducts.length > 0 ? (
 
                     <div className="product-grid">
