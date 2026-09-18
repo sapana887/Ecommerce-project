@@ -14,6 +14,15 @@ A responsive e-commerce product store built with **React.js** and **Fake Store A
 - Responsive product grid
 - Reusable `ProductCard` component
 
+### 📦 Product Details
+
+- View Details button for each product
+- Dedicated product details page
+- Display product image, title, category, rating, price, and description
+- Add products to cart from the product details page
+- Back to Products navigation
+- Reusable `ProductDetails` component
+
 ### 🛒 Shopping Cart
 
 - Add products to shopping cart
