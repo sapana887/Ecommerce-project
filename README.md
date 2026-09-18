@@ -159,7 +159,6 @@ Cart Restored After Refresh
 
 Possible features for future versions:
 
-* Product details page
 * User authentication
 * User profile
 * Order history
