@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ProductCard from "./components/ProductCard";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import ProductDetails from "./components/ProductDetails";
 
 function App() {
   const [page, setPage] = useState("login");
@@ -18,6 +19,9 @@ function App() {
 
     return savedCart ? JSON.parse(savedCart) : [];
   });
+
+  // Day 16: Selected product
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   // Fetch products
   useEffect(() => {
@@ -204,6 +208,17 @@ function App() {
     );
   }
 
+  // Day 16: Product Details
+  if (selectedProduct) {
+    return (
+      <ProductDetails
+        product={selectedProduct}
+        onAddToCart={handleAddToCart}
+        onBack={() => setSelectedProduct(null)}
+      />
+    );
+  }
+
   return (
     <div className="app">
 
@@ -219,6 +234,7 @@ function App() {
             onClick={(e) => {
               e.preventDefault();
               setPage("home");
+              setSelectedProduct(null);
             }}
           >
             Home
@@ -230,6 +246,7 @@ function App() {
               e.preventDefault();
 
               setPage("home");
+              setSelectedProduct(null);
 
               setTimeout(() => {
                 document
@@ -260,7 +277,10 @@ function App() {
 
         <button
           className="cart-button"
-          onClick={() => setPage("cart")}
+          onClick={() => {
+            setSelectedProduct(null);
+            setPage("cart");
+          }}
         >
           🛒 Cart ({cartItemCount})
         </button>
@@ -391,7 +411,9 @@ function App() {
 
                   <div className="summary-row">
                     <span>Total Items:</span>
-                    <span>{cartItemCount}</span>
+                    <span>
+                      {cartItemCount}
+                    </span>
                   </div>
 
                   <div className="summary-row">
@@ -571,6 +593,9 @@ function App() {
                             product={product}
                             onAddToCart={
                               handleAddToCart
+                            }
+                            onViewDetails={(product) =>
+                              setSelectedProduct(product)
                             }
                           />
 
