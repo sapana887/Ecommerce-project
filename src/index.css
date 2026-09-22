@@ -1028,3 +1028,14 @@ a {
   padding: 12px 25px;
   margin-top: 15px;
 }
+.sort-container {
+  margin-bottom: 30px;
+}
+.sort-container select {
+  width: 160px;
+  height: 32px;
+  padding: 0 9px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}

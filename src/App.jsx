@@ -13,14 +13,16 @@ function App() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
 
+  // Day 17: Sorting
+  const [sortBy, setSortBy] = useState("default");
+
   // Load cart from localStorage
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem("cart");
-
     return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  // Day 16: Selected product
+  // Selected product
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   // Fetch products
@@ -36,7 +38,6 @@ function App() {
         }
 
         const data = await response.json();
-
         setProducts(data);
       } catch {
         setError("Unable to load products.");
@@ -72,6 +73,29 @@ function App() {
     return matchesSearch && matchesCategory;
   });
 
+  // Day 17: Sort products
+  const sortedProducts = [...filteredProducts].sort(
+    (a, b) => {
+      if (sortBy === "price-low") {
+        return a.price - b.price;
+      }
+
+      if (sortBy === "price-high") {
+        return b.price - a.price;
+      }
+
+      if (sortBy === "name-az") {
+        return a.title.localeCompare(b.title);
+      }
+
+      if (sortBy === "name-za") {
+        return b.title.localeCompare(a.title);
+      }
+
+      return 0;
+    }
+  );
+
   // Add product to cart
   const handleAddToCart = (product) => {
     setCart((currentCart) => {
@@ -98,6 +122,11 @@ function App() {
         },
       ];
     });
+  };
+
+  // View product details
+  const handleViewProduct = (product) => {
+    setSelectedProduct(product);
   };
 
   // Remove product completely
@@ -208,7 +237,7 @@ function App() {
     );
   }
 
-  // Day 16: Product Details
+  // Product Details
   if (selectedProduct) {
     return (
       <ProductDetails
@@ -221,14 +250,11 @@ function App() {
 
   return (
     <div className="app">
-
       {/* HEADER */}
       <header className="header">
-
         <h1>My Store</h1>
 
         <nav>
-
           <a
             href="#"
             onClick={(e) => {
@@ -264,15 +290,11 @@ function App() {
             href="#"
             onClick={(e) => {
               e.preventDefault();
-
-              alert(
-                "Contact: support@mystore.com"
-              );
+              alert("Contact: support@mystore.com");
             }}
           >
             Contact
           </a>
-
         </nav>
 
         <button
@@ -284,23 +306,15 @@ function App() {
         >
           🛒 Cart ({cartItemCount})
         </button>
-
       </header>
 
       <main>
-
-        {/* CART PAGE */}
-
         {page === "cart" ? (
-
           <section className="cart-section">
-
             <h2>Shopping Cart</h2>
 
             {cart.length === 0 ? (
-
               <div className="empty-cart">
-
                 <p>Your cart is empty.</p>
 
                 <button
@@ -309,24 +323,15 @@ function App() {
                 >
                   ← Continue Shopping
                 </button>
-
               </div>
-
             ) : (
-
               <>
-
-                {/* CART ITEMS */}
-
                 <div className="cart-items">
-
                   {cart.map((product) => (
-
                     <div
                       key={product.id}
                       className="cart-item"
                     >
-
                       <img
                         src={product.image}
                         alt={product.title}
@@ -334,7 +339,6 @@ function App() {
                       />
 
                       <div className="cart-product-info">
-
                         <h3>{product.title}</h3>
 
                         <p>
@@ -342,37 +346,25 @@ function App() {
                           {product.price.toFixed(2)}
                         </p>
 
-                        {/* QUANTITY */}
-
                         <div className="quantity-controls">
-
                           <button
                             onClick={() =>
-                              decreaseQuantity(
-                                product.id
-                              )
+                              decreaseQuantity(product.id)
                             }
                           >
                             −
                           </button>
 
-                          <span>
-                            {product.quantity}
-                          </span>
+                          <span>{product.quantity}</span>
 
                           <button
                             onClick={() =>
-                              increaseQuantity(
-                                product.id
-                              )
+                              increaseQuantity(product.id)
                             }
                           >
                             +
                           </button>
-
                         </div>
-
-                        {/* SUBTOTAL */}
 
                         <p>
                           Subtotal: $
@@ -382,50 +374,34 @@ function App() {
                           ).toFixed(2)}
                         </p>
 
-                        {/* REMOVE */}
-
                         <button
                           className="remove-cart-button"
                           onClick={() =>
-                            handleRemoveFromCart(
-                              product.id
-                            )
+                            handleRemoveFromCart(product.id)
                           }
                         >
                           Remove
                         </button>
-
                       </div>
-
                     </div>
-
                   ))}
-
                 </div>
 
-                {/* CART SUMMARY */}
-
                 <div className="cart-summary">
-
                   <h3>Order Summary</h3>
 
                   <div className="summary-row">
                     <span>Total Items:</span>
-                    <span>
-                      {cartItemCount}
-                    </span>
+                    <span>{cartItemCount}</span>
                   </div>
 
                   <div className="summary-row">
                     <span>Subtotal:</span>
-                    <span>
-                      ${cartTotal.toFixed(2)}
-                    </span>
+                    <span>${cartTotal.toFixed(2)}</span>
                   </div>
 
                   <div className="summary-row">
                     <span>Shipping:</span>
-
                     <span>
                       {shippingCost === 0
                         ? "FREE"
@@ -433,31 +409,20 @@ function App() {
                     </span>
                   </div>
 
-                  {cartTotal > 0 &&
-                    cartTotal < 100 && (
-                      <p className="shipping-message">
-                        Add $
-                        {(100 - cartTotal).toFixed(
-                          2
-                        )}{" "}
-                        more for free shipping!
-                      </p>
-                    )}
+                  {cartTotal > 0 && cartTotal < 100 && (
+                    <p className="shipping-message">
+                      Add $
+                      {(100 - cartTotal).toFixed(2)}{" "}
+                      more for free shipping!
+                    </p>
+                  )}
 
                   <div className="summary-total">
-
                     <span>Total:</span>
-
-                    <span>
-                      ${finalTotal.toFixed(2)}
-                    </span>
-
+                    <span>${finalTotal.toFixed(2)}</span>
                   </div>
 
-                  {/* CART ACTIONS */}
-
                   <div className="cart-actions">
-
                     <button
                       className="clear-cart-button"
                       onClick={handleClearCart}
@@ -471,12 +436,8 @@ function App() {
                     >
                       Checkout
                     </button>
-
                   </div>
-
                 </div>
-
-                {/* CONTINUE SHOPPING */}
 
                 <button
                   className="continue-shopping-button"
@@ -484,49 +445,27 @@ function App() {
                 >
                   ← Continue Shopping
                 </button>
-
               </>
-
             )}
-
           </section>
-
         ) : (
-
-          /* ORIGINAL HOME PAGE */
-
           <>
-
-            {/* HERO */}
-
             <section className="hero">
-
               <h2>Welcome to My Store</h2>
-
-              <p>
-                Find the products you love.
-              </p>
-
+              <p>Find the products you love.</p>
             </section>
-
-            {/* PRODUCTS */}
 
             <section
               className="products-section"
               id="products"
             >
-
               <h2>Our Products</h2>
-
-              {/* LOADING */}
 
               {loading && (
                 <p className="message">
                   Loading products...
                 </p>
               )}
-
-              {/* ERROR */}
 
               {error && (
                 <p className="message error">
@@ -535,13 +474,8 @@ function App() {
               )}
 
               {!loading && !error && (
-
                 <>
-
-                  {/* SEARCH */}
-
                   <div className="search-container">
-
                     <input
                       type="text"
                       placeholder="Search products..."
@@ -550,15 +484,10 @@ function App() {
                         setSearch(e.target.value)
                       }
                     />
-
                   </div>
 
-                  {/* CATEGORY FILTER */}
-
                   <div className="category-container">
-
                     {categories.map((item) => (
-
                       <button
                         key={item}
                         className={
@@ -570,60 +499,70 @@ function App() {
                           setCategory(item)
                         }
                       >
-                        {item === "all"
-                          ? "All"
-                          : item}
+                        {item === "all" ? "All" : item}
                       </button>
-
                     ))}
-
                   </div>
 
-                  {/* PRODUCTS */}
+                  {/* Day 17: Sort Products */}
+                  <div className="sort-container">
+                    <label htmlFor="sort">
+                      Sort By:
+                    </label>
 
-                  {filteredProducts.length > 0 ? (
+                    <select
+                      id="sort"
+                      value={sortBy}
+                      onChange={(e) =>
+                        setSortBy(e.target.value)
+                      }
+                    >
+                      <option value="default">
+                        Default
+                      </option>
 
+                      <option value="price-low">
+                        Price: Low to High
+                      </option>
+
+                      <option value="price-high">
+                        Price: High to Low
+                      </option>
+
+                      <option value="name-az">
+                        Name: A to Z
+                      </option>
+
+                      <option value="name-za">
+                        Name: Z to A
+                      </option>
+                    </select>
+                  </div>
+
+                  {sortedProducts.length > 0 ? (
                     <div className="product-grid">
-
-                      {filteredProducts.map(
-                        (product) => (
-
-                          <ProductCard
-                            key={product.id}
-                            product={product}
-                            onAddToCart={
-                              handleAddToCart
-                            }
-                            onViewDetails={(product) =>
-                              setSelectedProduct(product)
-                            }
-                          />
-
-                        )
-                      )}
-
+                      {sortedProducts.map((product) => (
+                        <ProductCard
+                          key={product.id}
+                          product={product}
+                          onAddToCart={handleAddToCart}
+                          onViewDetails={
+                            handleViewProduct
+                          }
+                        />
+                      ))}
                     </div>
-
                   ) : (
-
                     <p className="message">
                       No products found.
                     </p>
-
                   )}
-
                 </>
-
               )}
-
             </section>
-
           </>
-
         )}
-
       </main>
-
     </div>
   );
 }
